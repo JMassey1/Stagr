@@ -3,6 +3,10 @@ import Foundation
 final class AllShowsViewModel: ObservableObject {
   @Published var shows: [Show] = []
   
+  var interestedShows: [Show] {
+    shows.filter { $0.isInterested }
+  }
+  
   init() {
     loadMockData()
   }
