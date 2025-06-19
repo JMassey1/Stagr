@@ -29,3 +29,7 @@ struct AllShowsView: View {
     }
   }
 }
+
+#Preview {
+  AllShowsView()
+}
