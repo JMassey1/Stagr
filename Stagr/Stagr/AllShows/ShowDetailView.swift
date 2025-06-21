@@ -4,8 +4,7 @@ struct ShowDetailView: View {
   private let VERTICAL_SPACING: CGFloat = 16
   private let BUTTON_CORNER_RADIUS: CGFloat = 10
   
-  @ObservedObject var viewModel: AllShowsViewModel
-  let show: Show
+  @Binding var show: Show
   
   var body: some View {
     VStack(spacing: VERTICAL_SPACING) {
@@ -21,7 +20,7 @@ struct ShowDetailView: View {
         .foregroundColor(.gray)
       
       Button(action: {
-        viewModel.toggleInterested(for: show)
+        show.isInterested.toggle()
       }) {
         Label(
           show.isInterested ? "Remove from My Shows" : "Add to My Shows",
@@ -43,6 +42,6 @@ struct ShowDetailView: View {
 #Preview {
   let viewModel = AllShowsViewModel()
   return NavigationView {
-    ShowDetailView(viewModel: viewModel, show: viewModel.shows.first!)
+    ShowDetailView(show: .constant(viewModel.shows.first!))
   }
 }

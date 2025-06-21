@@ -13,8 +13,11 @@ struct ShowListView: View {
   var body: some View {
     NavigationView {
       List {
-        ForEach(shows) { show in
-          NavigationLink(destination: ShowDetailView(viewModel: viewModel, show: show)) {
+        ForEach(viewModel.shows.indices, id: \.self) { index in
+          let showBinding = $viewModel.shows[index]
+          let show = viewModel.shows[index]
+          
+          NavigationLink(destination: ShowDetailView(show: showBinding)) {
             HStack {
               VStack(alignment: .leading) {
                 Text(show.artist)
