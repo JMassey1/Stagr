@@ -20,10 +20,9 @@ final class Festival {
     Calendar.current.dateComponents([.day], from: Date(), to: startDate).day ?? 0
   }
   
-  init(id: UUID, name: String, shows: [Show], startDate: Date, endDate: Date) {
+  init(id: UUID, name: String, startDate: Date, endDate: Date) {
     self.id = id
     self.name = name
-    self.shows = shows
     self.startDate = startDate
     self.endDate = endDate
   }
