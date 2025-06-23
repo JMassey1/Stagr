@@ -6,8 +6,10 @@ struct StagrApp: App {
   
     var body: some Scene {
         WindowGroup {
-          Image(systemName: "globe")
+          FestivalListView()
         }
-        .modelContainer(for: [Festival.self, Show.self])
+        .modelContainer(for: [Festival.self, Show.self]) { val in
+            print(val)
+        }
     }
 }

@@ -27,7 +27,7 @@ extension Show {
                 artist: "Headliner Act",
                 stage: "Main Stage",
                 notes: "Don't miss this one!",
-                priorityRaw: ShowPriority.mustSee.rawValue,
+                priority: ShowPriority.mustSee,
                 startTime: Calendar.current.date(bySettingHour: 22, minute: 0, second: 0, of: festival.startDate) ?? festival.startDate,
                 endTime: Calendar.current.date(bySettingHour: 23, minute: 30, second: 0, of: festival.startDate) ?? festival.startDate
             ),
@@ -36,7 +36,7 @@ extension Show {
                 artist: "Indie Band",
                 stage: "Sahara Tent",
                 notes: "Check them out if possible",
-                priorityRaw: ShowPriority.interested.rawValue,
+                priority: ShowPriority.interested,
                 startTime: Calendar.current.date(bySettingHour: 16, minute: 0, second: 0, of: festival.startDate) ?? festival.startDate,
                 endTime: Calendar.current.date(bySettingHour: 17, minute: 0, second: 0, of: festival.startDate) ?? festival.startDate
             )

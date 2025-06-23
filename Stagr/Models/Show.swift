@@ -1,7 +1,7 @@
 import Foundation
 import SwiftData
 
-enum ShowPriority: String, CaseIterable, Codable {
+enum ShowPriority: String, CaseIterable, Codable, Sendable {
   case mustSee = "Must See"
   case interested = "Interested"
   
@@ -32,11 +32,12 @@ final class Show {
   var stage: String
   var notes: String = ""
   
-  var priorityRaw: String
-  var priority: ShowPriority {
-    get { ShowPriority(rawValue: priorityRaw) ?? .interested }
-    set { priorityRaw = newValue.rawValue }
-  }
+  var priority: ShowPriority = ShowPriority.interested
+//  var priorityRaw: String
+//  var priority: ShowPriority {
+//    get { ShowPriority(rawValue: priorityRaw) ?? .interested }
+//    set { priorityRaw = newValue.rawValue }
+//  }
   
   var startTime: Date
   var endTime: Date
@@ -59,13 +60,13 @@ final class Show {
     return "\(formatter.string(from: startTime)) - \(formatter.string(from: endTime))"
   }
   
-  init(id: UUID, festival: Festival? = nil, artist: String, stage: String, notes: String, priorityRaw: String, startTime: Date, endTime: Date) {
+  init(id: UUID, festival: Festival? = nil, artist: String, stage: String, notes: String, priority: ShowPriority, startTime: Date, endTime: Date) {
     self.id = id
     self.festival = festival
     self.artist = artist
     self.stage = stage
     self.notes = notes
-    self.priorityRaw = priorityRaw
+    self.priority = priority
     self.startTime = startTime
     self.endTime = endTime
   }
