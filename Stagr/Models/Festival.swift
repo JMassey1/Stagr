@@ -18,7 +18,10 @@ final class Festival {
     return now >= startDate && now <= endDate
   }
   var daysFromNow: Int {
-    Calendar.current.dateComponents([.day], from: Date(), to: startDate).day ?? 0
+    let today = Calendar.current.startOfDay(for: Date())
+    let start = Calendar.current.startOfDay(for: startDate)
+    
+    return Calendar.current.dateComponents([.day], from: today, to: start).day ?? 0
   }
   
   init(id: UUID, name: String, shows: [Show] = [], startDate: Date, endDate: Date) {
