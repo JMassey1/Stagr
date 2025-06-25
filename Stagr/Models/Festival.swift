@@ -7,6 +7,7 @@ final class Festival {
   var name: String
   @Relationship(deleteRule: .cascade) var shows: [Show] = []
   
+  var createdAt: Date = Date()
   var startDate: Date
   var endDate: Date
   var duration: Int {
@@ -26,5 +27,6 @@ final class Festival {
     self.shows = shows
     self.startDate = startDate
     self.endDate = endDate
+    self.createdAt = Date()
   }
 }
