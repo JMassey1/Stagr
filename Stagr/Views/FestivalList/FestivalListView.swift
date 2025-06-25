@@ -3,11 +3,31 @@ import SwiftData
 
 struct FestivalListView: View {
   @Environment(\.modelContext) private var modelContext
-  @Query(sort: \Festival.startDate) private var festivals: [Festival]
+  
+  @State private var festivals: [Festival] = []
+  @State private var sortBy: SortOption = .startDate
+  @State private var sortOrder: SortOrder = .ascending
   @State private var showingAddFestival = false
   
+  enum SortOption: String, CaseIterable {
+    case startDate = "Start Date"
+    case createdAt = "Created At"
+  }
+  
+  enum SortOrder: String, CaseIterable {
+    case ascending = "Ascending"
+    case descending = "Descending"
+    
+    var systemImage: String {
+      switch self {
+      case .ascending: return "arrow.up"
+      case .descending: return "arrow.down"
+      }
+    }
+  }
+  
   var body: some View {
-    NavigationStack {
+    NavigationStack() {
       ZStack {
         LinearGradient(colors: [Color(.systemBackground), Color(.systemGray6)], startPoint: .top, endPoint: .bottom)
           .ignoresSafeArea()
@@ -20,6 +40,24 @@ struct FestivalListView: View {
       }
       .navigationTitle("My Festivals").navigationBarTitleDisplayMode(.large)
       .toolbar {
+        ToolbarItem(placement: .topBarLeading) {
+          HStack(spacing: 8) {
+            Menu {
+              ForEach(SortOption.allCases, id: \.self) { option in
+                Button(action: { setSortBy(option) }) {
+                  Label(option.rawValue, systemImage: sortBy == option ? "checkmark.circle" : "circle")
+                }
+              }
+            } label: {
+              Image(systemName: "line.3.horizontal.decrease.circle")
+            }
+            
+            Button(action: toggleSortOrder) {
+              Image(systemName: sortOrder.systemImage)
+            }
+          }
+        }
+        
         ToolbarItem(placement: .topBarTrailing) {
           Button {
             showingAddFestival = true
@@ -31,31 +69,30 @@ struct FestivalListView: View {
         }
       }
       .sheet(isPresented: $showingAddFestival) {
-        AddFestivalView()
+        AddFestivalView(onSave: loadFestivals)
       }
       .task {
+        loadFestivals()
         addSampleDataIfNeeded()
       }
-//      onAppear {
-//        addSampleDataIfNeeded()
-//      }
     }
   }
   
   private var festivalsList: some View {
-    ScrollView {
-      LazyVStack(spacing: 16) {
-        ForEach(festivals) { festival in
-          NavigationLink {
-            FestivalDetailView(festival: festival)
-          } label: {
-            FestivalCard(festival: festival)
-          }
-          .buttonStyle(PlainButtonStyle())
+    List {
+      ForEach(festivals) { festival in
+        NavigationLink {
+          FestivalDetailView(festival: festival)
+        } label: {
+          FestivalCard(festival: festival)
         }
+        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+        .listRowSeparator(.hidden)
       }
-      .padding(.horizontal).padding(.top, 8)
+      .onDelete(perform: deleteFestival)
     }
+    .listStyle(.plain)
+    .scrollContentBackground(.hidden)
   }
   
   private var emptyStateView: some View {
@@ -105,5 +142,40 @@ struct FestivalListView: View {
         modelContext.insert(show)
       }
     }
+  }
+  
+  private func loadFestivals() {
+    let sortDescriptor: SortDescriptor<Festival>
+    
+    switch sortBy {
+    case .startDate:
+      sortDescriptor = SortDescriptor(\Festival.startDate, order: sortOrder == .ascending ? .forward : .reverse)
+    case .createdAt:
+      sortDescriptor = SortDescriptor(\Festival.createdAt, order: sortOrder == .ascending ? .forward : .reverse)
+    }
+    
+    let descriptor = FetchDescriptor<Festival>(sortBy: [sortDescriptor])
+    do {
+      festivals = try modelContext.fetch(descriptor)
+    } catch {
+      print("Failed to fetch festivals: \(error)")
+    }
+  }
+  
+  private func setSortBy(_ sortBy: SortOption) {
+    self.sortBy = sortBy
+    loadFestivals()
+  }
+  
+  private func toggleSortOrder() {
+    sortOrder = sortOrder == .ascending ? .descending : .ascending
+    loadFestivals()
+  }
+  
+  private func deleteFestival(at offsets: IndexSet) {
+    for index in offsets {
+      modelContext.delete(festivals[index])
+    }
+    loadFestivals()
   }
 }
