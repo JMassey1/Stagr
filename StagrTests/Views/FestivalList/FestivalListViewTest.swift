@@ -1,114 +1,88 @@
-import XCTest
+import Foundation
+import Testing
 import SwiftData
 @testable import Stagr
 
-final class FestivalListViewTest: XCTestCase, FestivalTestProtocol {
-  var modelContainer: ModelContainer!
-  var modelContext: ModelContext!
+@Suite("FestivalListView Tests")
+struct FestivalListViewTest {
+  let testHelper: FestivalTestHelper
   
-  override func setUp() {
-    super.setUp()
-    setupFestivalTest()
+  init() throws {
+    testHelper = try FestivalTestHelper()
   }
   
-  override func tearDown() {
-    tearDownFestivalTest()
-    super.tearDown()
+  // MARK: - Loading Tests
+  @Test("Loading Festivals")
+  func loadingFestivals() throws {
+    let fetchDescriptor = FetchDescriptor<Festival>()
+    testHelper.addSampleFestivals()
+    
+    let festivals = try testHelper.modelContext.fetch(fetchDescriptor)
+    #expect(festivals.count == 3)
   }
   
-  func testLoadingFestivals() {
+  @Test("Loading Empty Festivals")
+  func loadingEmptyFestivals() throws {
     let fetchDescriptor = FetchDescriptor<Festival>()
     
-    addSampleFestivals()
-    do {
-      let festivals = try modelContext.fetch(fetchDescriptor)
-      XCTAssertEqual(festivals.count, 3)
-    } catch {
-      XCTFail("Failed to fetch festivals: \(error)")
-    }
-  }
-  
-  func testLoadingEmptyFestivals() {
-    let fetchDescriptor = FetchDescriptor<Festival>()
-    
-    do {
-      let festivals = try modelContext.fetch(fetchDescriptor)
-      XCTAssertTrue(festivals.isEmpty)
-    } catch {
-      XCTFail("Failed to fetch festivals: \(error)")
-    }
+    let festivals = try testHelper.modelContext.fetch(fetchDescriptor)
+    #expect(festivals.isEmpty)
   }
   
   // MARK: - Sorting Tests
-  func testSortingByStartDateAscending() {
+  @Test("Sorting by start date, ascending")
+  func sortingByStartDateAscending() throws {
     let sortDescriptor = SortDescriptor(\Festival.startDate, order: .forward)
     let fetchDescriptor = FetchDescriptor(sortBy: [sortDescriptor])
+    testHelper.addSampleFestivals()
     
-    addSampleFestivals()
+    let festivals = try testHelper.modelContext.fetch(fetchDescriptor)
+    #expect(festivals.count == 3)
     
-    do {
-      let festivals = try modelContext.fetch(fetchDescriptor)
-      XCTAssertEqual(festivals.count, 3)
-      
-      for i in 0..<festivals.count - 1 {
-        XCTAssertLessThanOrEqual(festivals[i].startDate, festivals[i + 1].startDate)
-      }
-    } catch {
-      XCTFail( "Failed to fetch festivals: \(error)")
+    for i in 0..<festivals.count - 1 {
+      #expect(festivals[i].startDate <= festivals[i + 1].startDate)
     }
   }
   
-  func testSortingByStartDateDescending() {
+  @Test("Sorting by start date, descending")
+  func sortingByStartDateDescending() throws {
     let sortDescriptor = SortDescriptor(\Festival.startDate, order: .reverse)
     let fetchDescriptor = FetchDescriptor(sortBy: [sortDescriptor])
+    testHelper.addSampleFestivals()
     
-    addSampleFestivals()
+    let festivals = try testHelper.modelContext.fetch(fetchDescriptor)
+    #expect(festivals.count == 3)
     
-    do {
-      let festivals = try modelContext.fetch(fetchDescriptor)
-      XCTAssertEqual(festivals.count, 3)
-      
-      for i in 0..<festivals.count - 1 {
-        XCTAssertGreaterThanOrEqual(festivals[i].startDate, festivals[i + 1].startDate)
-      }
-    } catch {
-      XCTFail( "Failed to fetch festivals: \(error)")
+    for i in 0..<festivals.count - 1 {
+      #expect(festivals[i].startDate >= festivals[i + 1].startDate)
     }
   }
   
-  func testSortingByCreatedAtAscending() {
+  @Test("Sorting by created at, ascending")
+  func sortingByCreatedAtAscending() throws {
     let sortDescriptor = SortDescriptor(\Festival.createdAt, order: .forward)
     let fetchDescriptor = FetchDescriptor(sortBy: [sortDescriptor])
+    testHelper.addSampleFestivals()
     
-    addSampleFestivals()
+    let festivals = try testHelper.modelContext.fetch(fetchDescriptor)
+    #expect(festivals.count == 3)
     
-    do {
-      let festivals = try modelContext.fetch(fetchDescriptor)
-      XCTAssertEqual(festivals.count, 3)
-      
-      for i in 0..<festivals.count - 1 {
-        XCTAssertLessThanOrEqual(festivals[i].startDate, festivals[i + 1].startDate)
-      }
-    } catch {
-      XCTFail( "Failed to fetch festivals: \(error)")
+    for i in 0..<festivals.count - 1 {
+      #expect(festivals[i].createdAt <= festivals[i + 1].createdAt)
     }
   }
   
-  func testSortingByCreatedAtDescending() {
+  @Test("Sorting by created at, descending")
+  func sortingByCreatedAtDescending() throws {
     let sortDescriptor = SortDescriptor(\Festival.createdAt, order: .reverse)
     let fetchDescriptor = FetchDescriptor(sortBy: [sortDescriptor])
+    testHelper.addSampleFestivals()
     
-    addSampleFestivals()
+    let festivals = try testHelper.modelContext.fetch(fetchDescriptor)
+    #expect(festivals.count == 3)
     
-    do {
-      let festivals = try modelContext.fetch(fetchDescriptor)
-      XCTAssertEqual(festivals.count, 3)
-      
-      for i in 0..<festivals.count - 1 {
-        XCTAssertGreaterThanOrEqual(festivals[i].startDate, festivals[i + 1].startDate)
-      }
-    } catch {
-      XCTFail( "Failed to fetch festivals: \(error)")
+    for i in 0..<festivals.count - 1 {
+      #expect(festivals[i].createdAt >= festivals[i + 1].createdAt)
     }
   }
 }

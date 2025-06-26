@@ -1,39 +1,30 @@
-import XCTest
+import Foundation
+import Testing
 import SwiftData
 @testable import Stagr
 
-final class AddFestivalViewTest: XCTestCase, FestivalTestProtocol {
-  var modelContainer: ModelContainer!
-  var modelContext: ModelContext!
+@Suite("AddFestivalView Tests")
+struct AddFestivalViewTest {
+  let testHelper: FestivalTestHelper
   
-  override func setUp() {
-    super.setUp()
-    setupFestivalTest()
+  init() throws {
+    testHelper = try FestivalTestHelper()
   }
   
-  override func tearDown() {
-    tearDownFestivalTest()
-    super.tearDown()
-  }
-  
-  func testAddingFestival() {
+  @Test("Adding Festival")
+  func AddingFestival() throws {
     let festival = Festival(
       id: UUID(),
       name: "Test Festival",
       startDate: Date(),
       endDate: Calendar.current.date(byAdding: .day, value: 3, to: Date()) ?? Date()
     )
-    
-    modelContext.insert(festival)
+    testHelper.modelContext.insert(festival)
     
     let fetchDescriptor = FetchDescriptor<Festival>()
-    do {
-      let festivals = try modelContext.fetch(fetchDescriptor)
-      XCTAssertEqual(festivals.count, 1)
-      XCTAssertEqual(festivals.first?.name, "Test Festival")
-      XCTAssertEqual(festivals.first?.id, festival.id)
-    } catch {
-      XCTFail("Failed to fetch festivals: \(error)")
-    }
+    
+    let festivals = try testHelper.modelContext.fetch(fetchDescriptor)
+    #expect(festivals.count == 1)
+    #expect(festivals[0] == festival)
   }
 }

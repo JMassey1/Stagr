@@ -1,75 +1,62 @@
-import XCTest
+import Foundation
+import Testing
 import SwiftData
 @testable import Stagr
 
-final class FestivalTest: XCTestCase, FestivalTestProtocol {
-  var modelContainer: ModelContainer!
-  var modelContext: ModelContext!
+@Suite("Festival Model Tests")
+struct FestivalModelTests {
+  let testHelper: FestivalTestHelper
   
-  override func setUp() {
-    super.setUp()
-    setupFestivalTest()
-    addSampleFestivals()
+  init() throws {
+    testHelper = try FestivalTestHelper()
   }
   
-  override func tearDown() {
-    tearDownFestivalTest()
-    super.tearDown()
-  }
-  
-  func testFestivalDurationCalculation() {
-    let startDate = Date()
-    let endDate = Calendar.current.date(byAdding: .day, value: 3, to: startDate)!
+  @Test("Festival Duration Calculation")
+  func festivalDurationCalculation() throws {
+    let datePair = testHelper.getDatePair(gap: 3)
     
     let festival = Festival(
       id: UUID(),
       name: "Test Festival",
-      startDate: startDate,
-      endDate: endDate
+      startDate: datePair.start,
+      endDate: datePair.end
     )
-    
-    XCTAssertEqual(festival.duration, 3)
+    #expect(festival.duration == 3)
   }
   
-  func testFestivalIsHappening() {
-    let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
-    let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
-    
+  @Test("Festival is Happening")
+  func festivalIsHappening() throws {
+    let datePair = testHelper.getDatePair(startDate: Date().addDays(-1), gap: 3)
     let festival = Festival(
       id: UUID(),
       name: "Test Festival",
-      startDate: yesterday,
-      endDate: tomorrow
+      startDate: datePair.start,
+      endDate: datePair.end
     )
-    
-    XCTAssertTrue(festival.isHappening)
+    #expect(festival.isHappening == true)
   }
   
-  func testFestivalIsNotHappening() {
-    let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
-    let dayAfterTomorrow = Calendar.current.date(byAdding: .day, value: 1, to: tomorrow)!
-    
+  @Test("Festival is not Happening")
+  func festivalIsNotHappening() throws {
+    let datePair = testHelper.getDatePair(startDate: Date().addDays(1), gap: 3)
     let festival = Festival(
       id: UUID(),
       name: "Test Festival",
-      startDate: tomorrow,
-      endDate: dayAfterTomorrow
+      startDate: datePair.start,
+      endDate: datePair.end
     )
-    
-    XCTAssertFalse(festival.isHappening)
+    #expect(festival.isHappening == false)
   }
   
-  func testFestivalDaysFromNow() {
-    let futureDate = Calendar.current.date(byAdding: .day, value: 3, to: Date())!
-    let endDate = Calendar.current.date(byAdding: .day, value: 3, to: futureDate)!
-    
+  @Test("Festival Days from Now Calculation")
+  func festivalDaysFromNowCalculation() throws {
+    let datePair = testHelper.getDatePair(startDate: Date().addDays(1), gap: 3)
     let festival = Festival(
       id: UUID(),
       name: "Test Festival",
-      startDate: futureDate,
-      endDate: endDate
+      startDate: datePair.start,
+      endDate: datePair.end
     )
-    
-    XCTAssertEqual(festival.daysFromNow, 3)
+    #expect(festival.daysFromNow == 1)
   }
 }
