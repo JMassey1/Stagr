@@ -33,11 +33,6 @@ final class Show {
   var notes: String = ""
   
   var priority: ShowPriority = ShowPriority.interested
-//  var priorityRaw: String
-//  var priority: ShowPriority {
-//    get { ShowPriority(rawValue: priorityRaw) ?? .interested }
-//    set { priorityRaw = newValue.rawValue }
-//  }
   
   var startTime: Date
   var endTime: Date
