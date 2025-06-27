@@ -53,7 +53,7 @@ extension TestHelper {
   }
   
   func getDatePair(startDate: Date? = nil, gap: Int, gapUnit: Calendar.Component = .day) -> (start: Date, end: Date) {
-    let startDate = startDate ?? Date()
+    let startDate = startDate ?? Calendar.current.startOfDay(for: Date())
     let endDate = Calendar.current.date(byAdding: gapUnit, value: gap, to: startDate)!
     return (startDate, endDate)
   }
