@@ -5,10 +5,10 @@ import SwiftData
 
 @Suite("FestivalListView Tests")
 struct FestivalListViewTest {
-  let testHelper: FestivalTestHelper
+  let testHelper: TestHelper
   
   init() throws {
-    testHelper = try FestivalTestHelper()
+    testHelper = try TestHelper()
   }
   
   // MARK: - Loading Tests
