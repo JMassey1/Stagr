@@ -4,30 +4,45 @@ struct FestivalCard: View {
   let festival: Festival
   
   var body: some View {
-    VStack(alignment: .leading, spacing: 12) {
-      HStack {
-        VStack(alignment: .leading, spacing: 4) {
-          Text(festival.name)
-            .font(.title2)
-            .fontWeight(.bold)
-            .foregroundStyle(.primary)
+    ZStack(alignment: .bottomLeading) {
+      // background
+      LinearGradient(
+        gradient: Gradient(colors: [.clear, .randomPastel]),
+        startPoint: .trailing,
+        endPoint: .leading
+      )
+      
+      // foreground
+      VStack(alignment: .leading, spacing: 12) {
+        HStack {
+          VStack(alignment: .leading, spacing: 4) {
+            Text(festival.name)
+              .font(.title2)
+              .fontWeight(.bold)
+              .foregroundStyle(.primary)
+            
+            Text(dateRangeText)
+              .font(.subheadline)
+              .foregroundStyle(.secondary)
+          }
           
-          Text(dateRangeText)
-            .font(.subheadline)
-            .foregroundStyle(.secondary)
+          Spacer()
+          
+          statusBadge
         }
         
-        Spacer()
-        
-        statusBadge
+        HStack(spacing: 24) {
+          statItem(icon: "calendar", value: "\(festival.duration + 1)", label: "Days")
+          statItem(icon: "music.note", value: "\(festival.shows.count)", label: "Shows")
+          statItem(icon: "star.fill", value: "\(festival.shows.filter { $0.priority == .mustSee}.count)", label: "Must See")
+        }
       }
-      
-      HStack(spacing: 24) {
-        statItem(icon: "calendar", value: "\(festival.duration + 1)", label: "Days")
-        statItem(icon: "music.note", value: "\(festival.shows.count)", label: "Shows")
-        statItem(icon: "star.fill", value: "\(festival.shows.filter { $0.priority == .mustSee}.count)", label: "Must See")
-      }
+      .padding()
     }
+    .frame(height: 125)
+    .clipShape(RoundedRectangle(cornerRadius: 16))
+    .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
+    .padding(.vertical, 4)
   }
   
   private var dateRangeText: String {
@@ -85,5 +100,14 @@ struct FestivalCard: View {
           .foregroundStyle(.secondary)
       }
     }
+  }
+}
+
+#Preview {
+  let sampleFestival = Festival.sampleData[0]
+  HStack(spacing: 6) {
+    Spacer()
+    FestivalCard(festival: sampleFestival)
+    Spacer()
   }
 }
