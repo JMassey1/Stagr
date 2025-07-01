@@ -1,37 +1,38 @@
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 struct FestivalListView: View {
-  @Environment(\.modelContext) private var modelContext
-  
+  @Environment(\.modelContext)
+  private var modelContext
+
   @State private var festivals: [Festival] = []
   @State private var sortBy: SortOption = .startDate
   @State private var sortOrder: SortOrder = .ascending
   @State private var showingAddFestival = false
-  
+
   enum SortOption: String, CaseIterable {
     case startDate = "Start Date"
     case createdAt = "Created At"
   }
-  
+
   enum SortOrder: String, CaseIterable {
     case ascending = "Ascending"
     case descending = "Descending"
-    
+
     var systemImage: String {
       switch self {
-      case .ascending: return "arrow.up"
-      case .descending: return "arrow.down"
+      case .ascending: "arrow.up"
+      case .descending: "arrow.down"
       }
     }
   }
-  
+
   var body: some View {
-    NavigationStack() {
+    NavigationStack {
       ZStack {
         LinearGradient(colors: [Color(.systemBackground), Color(.systemGray6)], startPoint: .top, endPoint: .bottom)
           .ignoresSafeArea()
-        
+
         if festivals.isEmpty {
           emptyStateView
         } else {
@@ -46,6 +47,7 @@ struct FestivalListView: View {
           HStack(spacing: 8) {
             Menu {
               ForEach(SortOption.allCases, id: \.self) { option in
+                // swiftlint:disable:next multiple_closures_with_trailing_closure
                 Button(action: { setSortBy(option) }) {
                   Label(option.rawValue, systemImage: sortBy == option ? "checkmark.circle" : "circle")
                 }
@@ -53,13 +55,13 @@ struct FestivalListView: View {
             } label: {
               Image(systemName: "line.3.horizontal.decrease.circle")
             }
-            
+
             Button(action: toggleSortOrder) {
               Image(systemName: sortOrder.systemImage)
             }
           }
         }
-        
+
         ToolbarItem(placement: .topBarTrailing) {
           Button {
             showingAddFestival = true
@@ -79,7 +81,7 @@ struct FestivalListView: View {
       }
     }
   }
-  
+
   private var festivalsList: some View {
     List {
       ForEach(festivals) { festival in
@@ -96,24 +98,24 @@ struct FestivalListView: View {
     .listStyle(.plain)
     .scrollContentBackground(.hidden)
   }
-  
+
   private var emptyStateView: some View {
     VStack(spacing: 24) {
       Image(systemName: "music.note.house.fill")
         .font(.system(size: 64))
         .foregroundStyle(.secondary)
-      
+
       VStack(spacing: 8) {
         Text("No Festivals Yet...")
           .font(.title2).fontWeight(.semibold)
-        
+
         Text("Add your first festival to get started!")
           .font(.body)
           .foregroundStyle(.secondary)
           .multilineTextAlignment(.center)
           .padding(.horizontal, 32)
       }
-      
+
       Button {
         showingAddFestival = true
       } label: {
@@ -130,14 +132,14 @@ struct FestivalListView: View {
       }
     }
   }
-  
+
   private func addSampleDataIfNeeded() {
     guard festivals.isEmpty else { return }
-    
+
     let sampleFestivals = Festival.sampleData
     for festival in sampleFestivals {
       modelContext.insert(festival)
-      
+
       let sampleShows = Show.sampleShows(for: festival)
       for show in sampleShows {
         show.festival = festival
@@ -145,17 +147,15 @@ struct FestivalListView: View {
       }
     }
   }
-  
+
   private func loadFestivals() {
-    let sortDescriptor: SortDescriptor<Festival>
-    
-    switch sortBy {
+    let sortDescriptor: SortDescriptor<Festival> = switch sortBy {
     case .startDate:
-      sortDescriptor = SortDescriptor(\Festival.startDate, order: sortOrder == .ascending ? .forward : .reverse)
+      SortDescriptor(\Festival.startDate, order: sortOrder == .ascending ? .forward : .reverse)
     case .createdAt:
-      sortDescriptor = SortDescriptor(\Festival.createdAt, order: sortOrder == .ascending ? .forward : .reverse)
+      SortDescriptor(\Festival.createdAt, order: sortOrder == .ascending ? .forward : .reverse)
     }
-    
+
     let descriptor = FetchDescriptor<Festival>(sortBy: [sortDescriptor])
     do {
       festivals = try modelContext.fetch(descriptor)
@@ -163,17 +163,17 @@ struct FestivalListView: View {
       print("Failed to fetch festivals: \(error)")
     }
   }
-  
+
   private func setSortBy(_ sortBy: SortOption) {
     self.sortBy = sortBy
     loadFestivals()
   }
-  
+
   private func toggleSortOrder() {
     sortOrder = sortOrder == .ascending ? .descending : .ascending
     loadFestivals()
   }
-  
+
   private func deleteFestival(at offsets: IndexSet) {
     for index in offsets {
       modelContext.delete(festivals[index])
@@ -190,7 +190,7 @@ struct FestivalListView: View {
   // swiftlint:disable:next force_try
   let container = try! ModelContainer(
     for: Festival.self,
-    configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+    configurations: ModelConfiguration(isStoredInMemoryOnly: true),
   )
   let context = container.mainContext
 

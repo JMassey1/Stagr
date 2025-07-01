@@ -1,0 +1,8 @@
+--wraparguments beforefirst
+--wrapcollections beforefirst
+--commas always
+--indent 2
+--self remove
+--trimwhitespace always
+--linebreaks lf
+--header ignore

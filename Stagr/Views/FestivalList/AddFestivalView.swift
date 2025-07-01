@@ -1,18 +1,20 @@
 import SwiftUI
 
 struct AddFestivalView: View {
-  @Environment(\.dismiss) private var dismiss
-  @Environment(\.modelContext) private var modelContext
-  
-  @State var festival: Festival = Festival(
+  @Environment(\.dismiss)
+  private var dismiss
+  @Environment(\.modelContext)
+  private var modelContext
+
+  @State var festival = Festival(
     id: UUID(),
     name: "",
     startDate: Date(),
-    endDate: Calendar.current.date(byAdding: .day, value: 3, to: Date()) ?? Date()
+    endDate: Calendar.current.date(byAdding: .day, value: 3, to: Date()) ?? Date(),
   )
-  
+
   let onSave: (() -> Void)?
-  
+
   var body: some View {
     NavigationStack {
       Form {
@@ -20,7 +22,7 @@ struct AddFestivalView: View {
           TextField("Festival Name", text: $festival.name)
             .textContentType(.name)
         }
-        
+
         Section("Dates") {
           DatePicker("Start Date", selection: $festival.startDate, displayedComponents: [.date])
           DatePicker("End Date", selection: $festival.endDate, displayedComponents: [.date])

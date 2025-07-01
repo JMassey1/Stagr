@@ -1,7 +1,7 @@
 import Foundation
-import Testing
-import SwiftData
 @testable import Stagr
+import SwiftData
+import Testing
 
 @Suite("AddFestivalView Tests")
 struct AddFestivalViewTest {
@@ -17,7 +17,7 @@ struct AddFestivalViewTest {
       id: UUID(),
       name: "Test Festival",
       startDate: Date(),
-      endDate: Calendar.current.date(byAdding: .day, value: 3, to: Date()) ?? Date()
+      endDate: Calendar.current.date(byAdding: .day, value: 3, to: Date()) ?? Date(),
     )
     testHelper.modelContext.insert(festival)
 

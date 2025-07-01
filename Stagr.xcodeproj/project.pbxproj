@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5831BEEB2E137A5500AB3876 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 5831BEEA2E137A5100AB3876 /* README.md */; };
+		5831BF622E13B20600AB3876 /* .swiftformat in Resources */ = {isa = PBXBuildFile; fileRef = 5831BF612E13B20200AB3876 /* .swiftformat */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -24,6 +25,7 @@
 		5831BE4C2E04AB1800AB3876 /* Stagr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Stagr.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5831BE902E09031300AB3876 /* StagrTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StagrTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5831BEEA2E137A5100AB3876 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		5831BF612E13B20200AB3876 /* .swiftformat */ = {isa = PBXFileReference; lastKnownFileType = text; path = .swiftformat; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -64,6 +66,7 @@
 				5831BE4E2E04AB1800AB3876 /* Stagr */,
 				5831BE912E09031300AB3876 /* StagrTests */,
 				5831BE4D2E04AB1800AB3876 /* Products */,
+				5831BF612E13B20200AB3876 /* .swiftformat */,
 			);
 			sourceTree = "<group>";
 		};
@@ -170,6 +173,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5831BEEB2E137A5500AB3876 /* README.md in Resources */,
+				5831BF622E13B20600AB3876 /* .swiftformat in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -185,6 +189,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		5831BEF12E13972A00AB3876 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
