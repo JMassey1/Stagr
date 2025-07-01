@@ -1,5 +1,4 @@
-name: iOS starter workflow
-
+name: iOS CI - Build and Test
 on:
   push:
     branches: [ "main" ]
@@ -8,16 +7,25 @@ on:
 
 jobs:
   build:
-    name: Build and Test default scheme using any available iPhone simulator
+    name: Build and Test
     runs-on: macos-15
+    env:
+      XCODE_VERSION: "16.4"
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Select Xcode 16.3
-        run: sudo xcode-select -s /Applications/Xcode_16.3.app
+      - name: Select Xcode ${{ env.XCODE_VERSION }}
+        run: sudo xcode-select -s /Applications/Xcode_${XCODE_VERSION}.app
       - name: Check Xcode version
         run: xcodebuild -version
+      - name: Fail if Xcode version is not ${{ env.XCODE_VERSION }}
+        run: |
+          version=$(xcodebuild -version | grep Xcode | awk '{print $2}')
+          if [ "$version" != "${XCODE_VERSION}" ]; then
+            echo "❌ Xcode version is $version, expected ${XCODE_VERSION}"
+            exit 1
+          fi
       - name: Set Default Scheme
         run: |
           scheme_list=$(xcodebuild -list -json | tr -d "\n")
