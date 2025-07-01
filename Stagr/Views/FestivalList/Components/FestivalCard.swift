@@ -42,7 +42,6 @@ struct FestivalCard: View {
     .frame(height: 125)
     .clipShape(RoundedRectangle(cornerRadius: 16))
     .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
-    .padding(.vertical, 4)
   }
   
   private var dateRangeText: String {
