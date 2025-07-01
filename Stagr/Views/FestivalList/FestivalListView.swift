@@ -38,7 +38,9 @@ struct FestivalListView: View {
           festivalsList
         }
       }
-      .navigationTitle("My Festivals").navigationBarTitleDisplayMode(.large)
+      // TODO: Make My Festivals not move with navigation scroll
+      .navigationTitle("My Festivals")
+      .navigationBarTitleDisplayMode(.large)
       .toolbar {
         ToolbarItem(placement: .topBarLeading) {
           HStack(spacing: 8) {
@@ -178,4 +180,24 @@ struct FestivalListView: View {
     }
     loadFestivals()
   }
+}
+
+#Preview {
+  FestivalListView()
+}
+
+#Preview {
+  // swiftlint:disable:next force_try
+  let container = try! ModelContainer(
+    for: Festival.self,
+    configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+  )
+  let context = container.mainContext
+
+  for festival in Festival.sampleData {
+    context.insert(festival)
+  }
+
+  return FestivalListView()
+    .modelContainer(container)
 }
