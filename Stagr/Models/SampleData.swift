@@ -32,13 +32,13 @@ extension Show {
           bySettingHour: 22,
           minute: 0,
           second: 0,
-          of: festival.startDate
+          of: festival.startDate,
         ) ?? festival.startDate,
         endTime: Calendar.current.date(
           bySettingHour: 23,
           minute: 30,
           second: 0,
-          of: festival.startDate
+          of: festival.startDate,
         ) ?? festival.startDate,
       ),
       Show(
@@ -51,13 +51,13 @@ extension Show {
           bySettingHour: 16,
           minute: 0,
           second: 0,
-          of: festival.startDate
+          of: festival.startDate,
         ) ?? festival.startDate,
         endTime: Calendar.current.date(
           bySettingHour: 17,
           minute: 0,
           second: 0,
-          of: festival.startDate
+          of: festival.startDate,
         ) ?? festival.startDate,
       ),
     ]
